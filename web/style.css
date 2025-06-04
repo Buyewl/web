@@ -1,0 +1,735 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0; /* Ubah padding body menjadi 0 */
+    background-color: #f4f7f6;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    box-sizing: border-box;
+    color: #333;
+    overflow-x: hidden; /* Mencegah horizontal scroll saat menu off-canvas terbuka */
+}
+
+/* Dark Mode styles (tetap dipertahankan, sesuaikan jika perlu) */
+body.dark-mode {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+}
+/* ... (gaya dark mode lainnya) ... */
+
+
+.container {
+    width: 100%;
+    max-width: 650px;
+    background-color: #ffffff;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Penting untuk posisi hamburger icon */
+    z-index: 1; /* Pastikan konten di bawah overlay */
+}
+
+/* --- Hamburger Icon Styles --- */
+.hamburger-icon {
+    position: absolute; /* Posisikan relatif terhadap container */
+    top: 20px;
+    left: 20px;
+    font-size: 1.8em;
+    color: #2c3e50;
+    cursor: pointer;
+    z-index: 2; /* Di atas konten lain di container */
+    padding: 5px; /* Area klik yang lebih besar */
+    transition: color 0.3s ease;
+}
+
+.hamburger-icon:hover {
+    color: #4CAF50;
+}
+
+/* --- Off-Canvas Menu Styles --- */
+.off-canvas-menu {
+    position: fixed; /* Tetap di tempat meskipun di-scroll */
+    top: 0;
+    left: 0;
+    width: 280px; /* Lebar menu */
+    height: 100%;
+    background-color: #2c3e50; /* Warna background menu */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* Pastikan di atas semua elemen lain */
+    transform: translateX(-100%); /* Sembunyikan di luar layar */
+    transition: transform 0.3s ease-out;
+    display: flex; /* Untuk tata letak header menu */
+    flex-direction: column;
+}
+
+.off-canvas-menu.open {
+    transform: translateX(0); /* Tampilkan menu */
+}
+
+.menu-header {
+    padding: 20px;
+    background-color: #34495e; /* Background header menu */
+    color: #ecf0f1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #4a6572;
+}
+
+.menu-header h2 {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5em;
+}
+
+.close-btn {
+    font-size: 2.5em;
+    cursor: pointer;
+    color: #ecf0f1;
+    transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+    color: #ff6b6b; /* Warna merah saat hover */
+}
+
+.off-canvas-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; /* Mengisi sisa ruang vertikal */
+    overflow-y: auto; /* Aktifkan scrolling jika menu terlalu panjang */
+}
+
+.off-canvas-list li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Garis pemisah antar item */
+}
+
+.off-canvas-list li:last-child {
+    border-bottom: none;
+}
+
+.off-canvas-list li a {
+    display: flex; /* Untuk menempatkan panah di kanan */
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #ecf0f1; /* Warna teks menu */
+    font-size: 1.1em;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.off-canvas-list li a:hover {
+    background-color: #4a6572;
+    color: #a4dded;
+}
+
+/* Sub-menu Off-Canvas */
+.off-canvas-submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #3f586a; /* Background sub-menu */
+    max-height: 0; /* Sembunyikan sub-menu secara default */
+    overflow: hidden;
+    transition: max-height 0.3s ease-out; /* Animasi expand/collapse */
+}
+
+.off-canvas-submenu.open {
+    max-height: 200px; /* Sesuaikan dengan tinggi maksimum sub-menu yang mungkin */
+}
+
+.off-canvas-submenu li a {
+    padding: 10px 25px 10px 40px; /* Padding lebih dalam untuk sub-menu */
+    font-size: 1em;
+    color: #d0d0d0;
+}
+
+.off-canvas-submenu li a:hover {
+    background-color: #5b768e;
+    color: #ecf0f1;
+}
+
+.submenu-arrow {
+    transition: transform 0.3s ease;
+}
+
+.submenu-arrow.rotate {
+    transform: rotate(90deg); /* Panah berputar saat sub-menu terbuka */
+}
+
+/* --- Overlay Styles --- */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparan hitam */
+    z-index: 999; /* Di bawah menu, di atas konten */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* General layout adjustments for elements within the container
+   to make space for the fixed hamburger icon */
+header {
+    /* ... kode yang sudah ada ... */
+    margin-top: 50px; /* Beri ruang untuk ikon hamburger di pojok atas */
+}
+.speech-bubble-top {
+    /* ... kode yang sudah ada ... */
+    margin-top: 20px; /* Sesuaikan jika perlu */
+}
+
+
+/* Dark Mode styles (pastikan ini diatur dengan benar jika Anda menggunakan dark mode) */
+body.dark-mode .hamburger-icon {
+    color: #ecf0f1;
+}
+body.dark-mode .hamburger-icon:hover {
+    color: #a4dded;
+}
+
+/* ... (kode CSS yang sudah ada lainnya) ... */
+
+body {
+    font-family: 'Open Sans', sans-serif; /* Font utama */
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f7f6; /* Off-white / light gray */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    box-sizing: border-box;
+    color: #333; /* Warna teks default */
+}
+
+/* Dark Mode styles (opsional, jika Anda menggunakan JavaScript toggle) */
+body.dark-mode {
+    background-color: #2c3e50; /* Darker background */
+    color: #ecf0f1; /* Lighter text */
+}
+
+body.dark-mode .container {
+    background-color: #34495e; /* Darker container background */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode header h1 {
+    color: #a4dded; /* Light blue */
+    -webkit-text-stroke: 1px #1a252e;
+    text-stroke: 1px #1a252e;
+    background-color: #4CAF50; /* Tetap hijau atau ganti ke warna lain yang cocok */
+}
+
+body.dark-mode .speech-bubble-top {
+    background-color: #4a6572;
+    border-color: #1a252e;
+    color: #ecf0f1;
+}
+
+body.dark-mode .speech-bubble-top::before,
+body.dark-mode .speech-bubble-top::after {
+    border-top-color: #1a252e;
+}
+body.dark-mode .speech-bubble-top::after {
+    border-top-color: #4a6572;
+}
+
+body.dark-mode .theme-toggle-button {
+    background-color: #6a7f92;
+    border-color: #1a252e;
+    color: #ecf0f1;
+    box-shadow: 3px 3px 0px #1a252e;
+}
+
+body.dark-mode .profile-section {
+    background-color: #4a6572;
+    border-color: #1a252e;
+}
+
+body.dark-mode .info-box-middle {
+    background-color: #5b768e;
+    border-color: #1a252e;
+    color: #ecf0f1;
+}
+
+body.dark-mode .info-box-middle h2 {
+    color: #a4dded;
+    -webkit-text-stroke: 0.5px #1a252e;
+    text-stroke: 0.5px #1a252e;
+    background-color: #4a6572;
+}
+
+body.dark-mode .about-me-section {
+    background-color: #5b768e;
+    border-color: #1a252e;
+    color: #ecf0f1;
+}
+
+body.dark-mode .about-me-section h3 {
+    color: #a4dded;
+    -webkit-text-stroke: 0.5px #1a252e;
+    text-stroke: 0.5px #1a252e;
+}
+
+body.dark-mode .social-media-icons a {
+    color: #ecf0f1; /* Warna ikon umum di dark mode */
+}
+
+body.dark-mode .social-media-icons .fa-instagram {
+    color: #E1306C; /* Tetap pertahankan warna brand */
+}
+
+body.dark-mode .social-media-icons .fa-tiktok {
+    color: #ecf0f1; /* Putih terang di dark mode */
+}
+
+
+.container {
+    width: 100%;
+    max-width: 650px; /* Sedikit lebih lebar */
+    background-color: #ffffff;
+    padding: 30px; /* Padding lebih besar */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Shadow lebih halus */
+    border-radius: 12px; /* Lebih rounded */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px; /* Jarak lebih besar */
+}
+
+header h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3.2em; /* Ukuran yang nyaman */
+    color: #2c3e50; /* Dark blue/charcoal */
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1); /* Stroke lebih halus */
+    text-stroke: 1px rgba(0, 0, 0, 0.1);
+    letter-spacing: 1px;
+    background-color: transparent; /* Hapus background warna */
+    padding: 0;
+    border-radius: 0;
+    display: inline-block;
+    box-shadow: none; /* Hapus shadow */
+}
+
+.speech-bubble-top {
+    position: relative;
+    background-color: #e0f2f7; /* Soft blue background */
+    border: 1px solid #cce7ed; /* Border lebih soft */
+    border-radius: 10px;
+    padding: 15px 25px; /* Padding lebih horizontal */
+    margin-bottom: 30px;
+    text-align: center;
+    width: 75%;
+    box-sizing: border-box;
+    font-size: 1.1em;
+    font-style: italic; /* Sedikit miring untuk quote */
+    color: #555;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Shadow halus */
+}
+
+.speech-bubble-top::before,
+.speech-bubble-top::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #cce7ed; /* Warna border */
+    bottom: -11px; /* Sesuaikan posisi ekor */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.speech-bubble-top::after {
+    border-top-color: #e0f2f7; /* Warna background bubble */
+    bottom: -9px; /* Posisi inner tail */
+}
+
+.theme-toggle-button {
+    background-color: #4CAF50; /* Green (bisa diganti ke warna netral seperti #607d8b) */
+    color: #fff;
+    border: none; /* Hapus border */
+    padding: 12px 25px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1em;
+    border-radius: 25px; /* Lebih rounded */
+    cursor: pointer;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow lebih halus */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.theme-toggle-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: translateY(-2px); /* Efek naik sedikit */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.profile-section {
+    width: 100%;
+    background-color: #f0f7f9; /* Light, calm blue */
+    border: 1px solid #d9edf7; /* Border lebih soft */
+    border-radius: 12px; /* Lebih rounded */
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06); /* Shadow halus */
+}
+
+.profile-image-container {
+    border: 3px solid #2c3e50; /* Dark blue border */
+    border-radius: 50%;
+    overflow: hidden;
+    width: 160px; /* Ukuran sedikit lebih besar */
+    height: 160px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Shadow pada lingkaran gambar */
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.info-box-middle { /* Ganti dari speech-bubble-middle */
+    background-color: #e0f7f7; /* Soft cyan background */
+    border: 1px solid #cceeed; /* Border senada */
+    border-radius: 12px;
+    padding: 20px 25px;
+    text-align: left;
+    margin-top: 0; /* Tidak ada margin atas lagi */
+    width: 100%; /* Lebar penuh dalam section */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.info-box-middle h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8em; /* Ukuran lebih kecil dari header utama */
+    color: #34495e; /* Darker text */
+    -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.05); /* Stroke sangat halus */
+    text-stroke: 0.5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 10px;
+    background-color: transparent; /* Hapus background */
+    padding: 0;
+    border-radius: 0;
+    display: block; /* Agar menempati baris penuh */
+}
+
+.info-box-middle p {
+    font-size: 1em; /* Ukuran teks utama */
+    line-height: 1.7;
+    color: #555;
+}
+
+.about-me-section {
+    width: 100%;
+    background-color: #f7f3e0; /* Soft yellow/cream background */
+    border: 1px solid #ede1cc; /* Border senada */
+    border-radius: 12px;
+    padding: 25px;
+    text-align: left;
+    margin-bottom: 30px; /* Jarak dari ikon sosial */
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+
+.about-me-section h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8em;
+    color: #2c3e50; /* Dark blue/charcoal */
+    -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.05);
+    text-stroke: 0.5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.about-me-section p {
+    font-size: 1em;
+    line-height: 1.7;
+    color: #555;
+}
+
+/* Social Media Icons */
+.social-media-icons {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 25px; /* Spasi antar ikon lebih besar */
+    width: 100%;
+}
+
+.social-media-icons a {
+    color: #7f8c8d; /* Grey/neutral color */
+    font-size: 3.2em; /* Ukuran ikon */
+    transition: color 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
+}
+
+.social-media-icons a:hover {
+    transform: scale(1.15); /* Efek zoom saat di-hover lebih terasa */
+}
+
+/* Warna spesifik untuk ikon (tetap pertahankan warna brand untuk recognisi) */
+.social-media-icons .fa-instagram:hover {
+    color: #E1306C; /* Instagram gradient-like color */
+}
+
+.social-media-icons .fa-tiktok:hover {
+    color: #000000; /* TikTok black */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    header h1 {
+        font-size: 2.5em;
+    }
+    .speech-bubble-top {
+        width: 90%;
+    }
+    .profile-image-container {
+        width: 140px;
+        height: 140px;
+    }
+    .info-box-middle h2,
+    .about-me-section h3 {
+        font-size: 1.6em;
+    }
+    .social-media-icons a {
+        font-size: 2.8em;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+    header h1 {
+        font-size: 2em;
+    }
+    .speech-bubble-top {
+        padding: 10px 15px;
+        font-size: 1em;
+    }
+    .theme-toggle-button {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+    .profile-image-container {
+        width: 100px;
+        height: 100px;
+    }
+    .info-box-middle h2,
+    .about-me-section h3 {
+        font-size: 1.4em;
+    }
+    .info-box-middle p,
+    .about-me-section p {
+        font-size: 0.9em;
+    }
+    .social-media-icons a {
+        font-size: 2.5em;
+        gap: 15px;
+    }
+    /* ... (kode CSS yang sudah ada sebelumnya) ... */
+
+/* Menyesuaikan margin untuk elemen-elemen setelah navigasi */
+.speech-bubble-top {
+    /* ... kode yang sudah ada ... */
+    margin-bottom: 20px; /* Kurangi margin untuk memberi ruang nav */
+}
+
+/* --- Navigation Styles --- */
+.main-nav {
+    width: 100%;
+    margin-bottom: 30px; /* Jarak antara navigasi dan profile section */
+    background-color: #f8f8f8; /* Background untuk nav bar */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    overflow: hidden; /* Penting untuk border-radius */
+}
+
+.tab-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex; /* Untuk membuat tab berdampingan */
+    justify-content: space-around; /* Menyebarkan item secara merata */
+    border-bottom: 1px solid #e0e0e0; /* Garis bawah untuk tab */
+}
+
+.tab-menu li {
+    position: relative; /* Penting untuk posisi sub-menu */
+    flex-grow: 1; /* Agar item mengisi ruang yang tersedia */
+    text-align: center;
+}
+
+.tab-menu li a {
+    display: block;
+    padding: 15px 10px;
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 1.05em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-bottom: 3px solid transparent; /* Garis bawah indikator tab aktif/hover */
+}
+
+.tab-menu li a:hover {
+    background-color: #eef;
+    color: #2c3e50;
+    border-bottom-color: #4CAF50; /* Warna hijau sebagai indikator aktif */
+}
+
+/* Sub-menu styles */
+.submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 100%; /* Tepat di bawah tab utama */
+    left: 0;
+    background-color: #ffffff; /* Background sub-menu */
+    border: 1px solid #ddd;
+    border-top: none; /* Menghilangkan border atas agar menyatu */
+    border-radius: 0 0 8px 8px; /* Rounded corners bawah */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    min-width: 150px; /* Lebar minimum sub-menu */
+    z-index: 100; /* Pastikan sub-menu muncul di atas konten lain */
+    display: none; /* Sembunyikan secara default */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px); /* Efek slide down */
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+
+.submenu li a {
+    padding: 10px 15px;
+    font-size: 0.95em;
+    color: #666;
+    white-space: nowrap; /* Mencegah teks sub-menu pecah baris */
+    border-bottom: none; /* Hapus border bawah yang diwarisi dari .tab-menu li a */
+}
+
+.submenu li a:hover {
+    background-color: #f0f0f0;
+    color: #2c3e50;
+    border-bottom: none; /* Pastikan tidak ada border bottom saat hover */
+}
+
+/* Show sub-menu on hover for parent li */
+.tab-menu li.has-submenu:hover > .submenu {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Responsive adjustments for navigation */
+@media (max-width: 768px) {
+    .tab-menu {
+        flex-wrap: wrap; /* Izinkan tab untuk wrap ke baris baru */
+    }
+    .tab-menu li {
+        flex-basis: 50%; /* Dua kolom pada layar sedang */
+        margin-bottom: 5px; /* Spasi antar baris tab */
+    }
+    .main-nav {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tab-menu li {
+        flex-basis: 100%; /* Satu kolom pada layar kecil */
+    }
+    .tab-menu li a {
+        font-size: 0.9em;
+        padding: 12px 8px;
+    }
+    .submenu {
+        min-width: unset; /* Hapus min-width */
+        width: 100%; /* Isi lebar penuh parent tab */
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .submenu li a {
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+    .main-nav {
+        margin-bottom: 15px;
+    }
+}
+
+/* Dark Mode styles for navigation (jika Anda akan menambahkan kembali toggle theme) */
+body.dark-mode .main-nav {
+    background-color: #3f586a;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .tab-menu li a {
+    color: #c0c0c0;
+    border-bottom-color: transparent;
+}
+
+body.dark-mode .tab-menu li a:hover {
+    background-color: #4a6572;
+    color: #ecf0f1;
+    border-bottom-color: #a4dded;
+}
+
+body.dark-mode .submenu {
+    background-color: #4a6572;
+    border-color: #2c3e50;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .submenu li a {
+    color: #d0d0d0;
+}
+
+body.dark-mode .submenu li a:hover {
+    background-color: #5b768e;
+    color: #ecf0f1;
+}
+
+/* ... (kode CSS yang sudah ada lainnya) ... */
+}
