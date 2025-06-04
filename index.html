@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fahri Muhammad - Profile</title>
+    <link rel="stylesheet" href="web/style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <nav class="off-canvas-menu" id="offCanvasMenu">
+        <div class="menu-header">
+            <span class="close-btn" id="closeMenu">&times;</span>
+            <h2>Menu</h2>
+        </div>
+        <ul class="off-canvas-list">
+            <li><a href="#home">Home</a></li>
+            <li class="has-submenu">
+                <a href="#about">About <i class="fas fa-chevron-right submenu-arrow"></i></a>
+                <ul class="off-canvas-submenu">
+                    <li><a href="#bio">Biography</a></li>
+                    <li><a href="link">Skills</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                </ul>
+            </li>
+            <li class="has-submenu">
+                <a href="#projects">Projects <i class="fas fa-chevron-right submenu-arrow"></i></a>
+                <ul class="off-canvas-submenu">
+                    <li><a href="#webdev">Web Dev</a></li>
+                    <li><a href="#network">Networking</a></li>
+                </ul>
+            </li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="hamburger-icon" id="hamburgerIcon">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <header>
+            <h1>Fahri Muhammad</h1>
+        </header>
+
+        <div class="speech-bubble-top">
+            <p>Ilyasa: "With great code comes great responsibility!"</p>
+        </div>
+        
+        <section class="profile-section">
+            <div class="profile-image-container">
+                <img src="web/oy.jpg" alt="Fahri" class="profile-image">
+            </div>
+            <div class="info-box-middle">
+                <h2>HI, I'M FAHRI MUHAMAD!</h2>
+                <p>A student at SMKN 1 NGAWEN, majoring in Network and Computer Engineering (TJKT), class of 2024-2027. Born in 2008. Full of energy and ideas!</p>
+            </div>
+        </section>
+
+        <section class="about-me-section">
+            <h3>ABOUT ME</h3>
+            <p>Hello everyone. My name is Ilyasa Rosada. I am currently pursuing my education at SMKN 1 Tangerang, majoring in Computer and Network Engineering (TJKT). At school, I am actively involved in student organizations and frequently participate in various school activities. In addition, I focus on personal development and and have proven myself by joining several competitions. I also often serve as an IT support, helping to repair and maintain computers in the school laboratories for the DKV, AKL, and MPLB departments.</p>
+        </section>
+        <div class="social-media-icons">
+            <a href="https://www.instagram.com/your_instagram_handle/" target="_blank" aria-label="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.tiktok.com/@your_tiktok_handle/" target="_blank" aria-label="TikTok">
+                <i class="fab fa-tiktok"></i>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const hamburgerIcon = document.getElementById('hamburgerIcon');
+        const offCanvasMenu = document.getElementById('offCanvasMenu');
+        const closeMenu = document.getElementById('closeMenu');
+        const overlay = document.getElementById('overlay');
+        const hasSubmenus = document.querySelectorAll('.off-canvas-list .has-submenu > a');
+
+        // Toggle Off-Canvas Menu
+        hamburgerIcon.addEventListener('click', () => {
+            offCanvasMenu.classList.add('open');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Mencegah scrolling body
+        });
+
+        closeMenu.addEventListener('click', () => {
+            offCanvasMenu.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = ''; // Mengembalikan scrolling body
+        });
+
+        overlay.addEventListener('click', () => {
+            offCanvasMenu.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        // Toggle Submenus
+        hasSubmenus.forEach(item => {
+            item.addEventListener('click', function(e) {
+                // Jangan mencegah default link jika tidak ada sub-menu
+                if (this.parentElement.classList.contains('has-submenu')) {
+                    e.preventDefault(); // Mencegah link utama langsung navigasi
+                    const submenu = this.nextElementSibling;
+                    submenu.classList.toggle('open');
+                    this.querySelector('.submenu-arrow').classList.toggle('rotate');
+                }
+            });
+        });
+
+        // Close menu when a link inside it is clicked
+        offCanvasMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                offCanvasMenu.classList.remove('open');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+                // Optional: Close all submenus when menu is closed
+                document.querySelectorAll('.off-canvas-submenu.open').forEach(sub => {
+                    sub.classList.remove('open');
+                    sub.previousElementSibling.querySelector('.submenu-arrow').classList.remove('rotate');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
